@@ -24,8 +24,8 @@ end
       due_date: Date.today + rand(1..10).days,
       collaborators: Faker::Internet.email,
       completed: Date.today + rand(1..10).days,
-      created_at: Date.today - rand(1..10).days,
-      updated_at: Date.today - rand(1..5).days,
+      created_at: Date.today - rand(1..20).days,
+      updated_at: Date.today - rand(1..20).days,
       user_id: user.id
     )
 end
