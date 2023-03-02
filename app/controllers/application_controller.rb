@@ -16,7 +16,7 @@ class ApplicationController < Sinatra::Base
         task = Task.new(
           title: data['title'],
           description: data['description'],
-          emails: data['emails'],
+          collaborators: data['emails'],
           due_date: data['due_date']
         )
       
@@ -30,7 +30,7 @@ class ApplicationController < Sinatra::Base
     end
 
     # A post request method
-    post '/tasks' do
+    post '/tasks/update' do
         task_params = JSON.parse(request.body.read)
         task = Task.new(task_params)
         
@@ -40,6 +40,18 @@ class ApplicationController < Sinatra::Base
         else
           status 422
           { errors: task.errors.full_messages }.to_json
+        end
+    end
+    
+    # Get more information on a task by id
+    get '/tasks/:id' do
+        task = Task.find_by(id: params[:id])
+      
+        if task
+          task.to_json
+        else
+          status 404
+          { error: 'Task not found' }.to_json
         end
     end
 
