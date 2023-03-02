@@ -30,7 +30,7 @@ class ApplicationController < Sinatra::Base
     end
 
     # A post request method
-    post '/tasks/update' do
+    post '/tasks' do
         task_params = JSON.parse(request.body.read)
         task = Task.new(task_params)
         
@@ -67,6 +67,22 @@ class ApplicationController < Sinatra::Base
           { error: "Task not found" }.to_json
         end
     end
+
+    # Filter through tasks using the date the task was created
+    get '/tasks' do
+        if params[:created_at].present?
+          tasks = Task.where(created_at: params[:created_at])
+          tasks.to_json
+        else
+          tasks = Task.all
+          tasks.to_json
+        end
+    end
+      
+      
+      
+      
+      
 
     # Check if a user is authenticated
     post '/login' do
