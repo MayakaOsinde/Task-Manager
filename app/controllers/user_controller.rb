@@ -8,10 +8,10 @@ require_relative '../models/user'
 class UserController < Sinatra::Base
 
     # Lists all users
-    get '/users' do
-        users = User.all
-        users.to_json
-    end
+    # get '/users' do
+    #     users = User.all
+    #     users.to_json
+    # end
 
     post '/users/register' do
       # Get user information from request body
