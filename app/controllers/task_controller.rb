@@ -19,7 +19,7 @@ class TaskController < Sinatra::Base
     post '/tasks/create' do
       
 
-      if session[:user_id]
+      # if session[:user_id]
 
         request.body.rewind
         data = JSON.parse(request.body.read)
@@ -29,7 +29,7 @@ class TaskController < Sinatra::Base
           description: data['description'],
           collaborators: data['emails'],
           due_date: data['due_date'],
-          user_id: session["user_id"]
+          user_id: data['user_id']
         )
       
         if task.save
@@ -39,10 +39,10 @@ class TaskController < Sinatra::Base
           status 422
           { errors: task.errors }.to_json
         end
-      else 
-        status 403
-        { error: "Please log in" }.to_json
-      end
+      # else 
+      #   status 403
+      #   { error: "Please log in" }.to_json
+      # end
         
     end
 
@@ -73,19 +73,19 @@ class TaskController < Sinatra::Base
     
     
     # Get more information on a task by id
-      get '/tasks/mytasks' do
-        if session[:user_id]
-          task = Task.where(user_id: session[:user_id])
+      get '/tasks/:user_id' do
+        # if session[:user_id]
+          task = Task.where(user_id: params[:user_id])
 
           if task
             task.to_json
           else
-            status 404
+            status 403
           end
-        else
-          status 403
-          {error: "Log in"}.to_json
-        end
+        # else
+        #   status 403
+        #   {error: "Log in"}.to_json
+        # end
       end
 
       # private
@@ -106,6 +106,16 @@ class TaskController < Sinatra::Base
             status 404
             { error: "Task not found" }.to_json
           end
+      end
+
+      put '/tasks/mytasks/update' do
+        task = Task.find(data[:user_id])
+        if task.update(completed: params[:completed])
+          # json task
+        else
+          status 400
+          json task.errors
+        end
       end
 
     # Filter through tasks using the date the task was created

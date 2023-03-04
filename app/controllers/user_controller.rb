@@ -56,8 +56,8 @@ class UserController < Sinatra::Base
       # Check if user exists and password matches
       if user && user.authenticate(data['password'])
         # Return success message with user details
-        session[:user_id] = user.id
-        halt 200, { message: 'User authenticated successfully' }.to_json
+        # session[:user_id] = user.id
+        halt 200, { user_id: user.id, username: user.first_name }.to_json
 
       else
         # Return error message
