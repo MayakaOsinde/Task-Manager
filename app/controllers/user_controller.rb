@@ -3,6 +3,8 @@ require 'sinatra'
 require 'bcrypt'
 require 'json'
 require_relative '../models/user'
+require 'sinatra/session'
+
 
 
 class UserController < Sinatra::Base
@@ -13,7 +15,11 @@ class UserController < Sinatra::Base
     #     users.to_json
     # end
 
+    enable :sessions
+
     post '/users/register' do
+
+      
       # Get user information from request body
       data = JSON.parse(request.body.read)
     
@@ -38,9 +44,9 @@ class UserController < Sinatra::Base
     end
     
       
-
       
     post '/users/login' do
+
       # Get user information from request body
       data = JSON.parse(request.body.read)
   
@@ -50,12 +56,25 @@ class UserController < Sinatra::Base
       # Check if user exists and password matches
       if user && user.authenticate(data['password'])
         # Return success message with user details
-        { message: 'User authenticated successfully', user: user }.to_json
+        session[:user_id] = user.id
+        halt 200, { message: 'User authenticated successfully' }.to_json
+
       else
         # Return error message
         halt 401, { error: 'Invalid email or password' }.to_json
       end
     end
         
+    get '/users/logout' do
+      
+      if session[:user_id]
+        # Remove user id from session
+      session.clear
+      halt 200, { message: 'User logged out successfully' }.to_json
+      else 
+        {error: 'Please log in'}
+        halt 403
+      end      
+    end
       
 end

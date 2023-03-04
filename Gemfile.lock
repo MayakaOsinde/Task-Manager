@@ -80,6 +80,8 @@ GEM
       activerecord (>= 4.1)
       sinatra (>= 1.0)
     sinatra-cross_origin (0.4.0)
+    sinatra-session (1.0.0)
+      sinatra (>= 1.0)
     sqlite3 (1.6.1-x86_64-linux)
     thin (1.8.1)
       daemons (~> 1.0, >= 1.0.9)
@@ -111,6 +113,7 @@ DEPENDENCIES
   sinatra (~> 3.0, >= 3.0.5)
   sinatra-activerecord (~> 2.0, >= 2.0.26)
   sinatra-cross_origin (~> 0.4.0)
+  sinatra-session (~> 1.0)
   sqlite3 (~> 1.6, >= 1.6.1)
   thin (~> 1.8)
 

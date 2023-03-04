@@ -2,6 +2,8 @@ source "https://rubygems.org/"
 
 gem 'sinatra', '~> 3.0', '>= 3.0.5'
 
+gem 'sinatra-session', '~> 1.0'
+
 gem "thin", "~> 1.8"
 
 gem 'rack', '~> 2.2', '>= 2.2.4'
