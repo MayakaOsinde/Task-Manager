@@ -16,7 +16,7 @@ class TaskController < Sinatra::Base
 
 
     # Create a new task
-    post '/tasks/create' do
+    post '/tasks/create/:user_id' do
       
 
       # if session[:user_id]
@@ -27,7 +27,6 @@ class TaskController < Sinatra::Base
         task = Task.new(
           title: data['title'],
           description: data['description'],
-          collaborators: data['emails'],
           due_date: data['due_date'],
           user_id: data['user_id']
         )
@@ -46,35 +45,10 @@ class TaskController < Sinatra::Base
         
     end
 
-
-    # get "/tasks/usertasks" do
-    #   # Check if the user is logged in
-    #   # redirect "/login" unless session[:user_id]
-    
-    #   # Retrieve all tasks for the logged in user
-    #   tasks = db.execute("SELECT * FROM tasks WHERE user_id = ?", session[:user_id])
-    
-
-    # end
-    # A post request method
-    # post '/tasks' do
-    #     task_params = JSON.parse(request.body.read)
-    #     task = Task.new(task_params)
-        
-    #     if task.save
-    #       status 201
-    #       task.to_json
-    #     else
-    #       status 422
-    #       { errors: task.errors.full_messages }.to_json
-    #     end
-    # end
-
     
     
     # Get more information on a task by id
       get '/tasks/:user_id' do
-        # if session[:user_id]
           task = Task.where(user_id: params[:user_id])
 
           if task
@@ -82,36 +56,28 @@ class TaskController < Sinatra::Base
           else
             status 403
           end
-        # else
-        #   status 403
-        #   {error: "Log in"}.to_json
-        # end
       end
 
-      # private
-      
-      # def current_user
-      #     @current_user ||= User.find(session[:user_id]) if session[:user_id]
-      # end
 
 
     # A remove/ delete method
-      delete '/tasks/delete/:id' do
-          task = Task.find_by(id: params[:id])
-          
-          if task
-            task.destroy
-            status 204
-          else
-            status 404
-            { error: "Task not found" }.to_json
-          end
+    delete '/tasks/delete/:id' do
+      task = Task.find_by(id: params[:id])
+      
+      if task
+        task.destroy
+        status 204
+      else
+        status 404
+        { error: "Task not found" }.to_json
       end
+    end
+    
 
-      put '/tasks/mytasks/update' do
-        task = Task.find(data[:user_id])
+      put '/tasks/update/:id' do
+        task = Task.where(params[:id])
         if task.update(completed: params[:completed])
-          # json task
+          json task
         else
           status 400
           json task.errors
